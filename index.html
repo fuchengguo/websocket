@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="demo">
+        <input v-model="text" />
+        <button @click="send">发送</button>
+        <ul>
+            <li v-for="a in arr">{{a}}</li>
+        </ul>
+    </div>
+    <script src="js/socket.js"></script>
+    <script src="js/vue.js"></script>
+    <script>
+        // sockte提供io方法
+        var socket = io('http://10.30.152.57:6789');
+        new Vue({
+            el:"#demo",
+            data:{
+                text:"",
+                arr:[]
+            },
+            methods:{
+                send:function(){
+                    var self = this;
+                    // 发送信息
+                    socket.emit("chat",self.text)
+                }
+            },
+            mounted:function(){
+                var self = this;
+                // 监听和接受信息
+                socket.on("getText",function(data){
+                    console.log(data)
+                    self.arr.push(data.text)
+                })
+            }
+        })
+    </script>
+</body>
+</html>
